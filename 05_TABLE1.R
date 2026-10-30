@@ -227,9 +227,9 @@ table1B <- table1b_data %>%
   bold_labels()
 
 # 8. TABLE 1C: IMPUTED, SURVEY-WEIGHTED
-# note: This one takes so long!! is something wrong with using tbl_svysummary?
+# note: This one takes so long to run, because of tbl_svysummary?
 
-# Create Survey Design
+# survey design
 design <- svydesign(
   ids = ~psu_year,
   strata = ~strata_year,
@@ -255,8 +255,23 @@ table1C <- design %>%
   add_overall() %>%
   bold_labels()
 
-# 9. SAVE TABLES
+# format
+table1C_gt <- table1C %>%
+  as_gt() %>%
+  tab_header(
+    title = "Table 1C. After Imputation - Survey-Weighted",
+    subtitle = "BRFSS 2023-2025, ages 18-64"
+  ) %>%
+  tab_source_note(
+    source_note = paste(
+      "Completed imputation #1.",
+      "Unweighted counts and survey-weighted percentages.",
+      "Pooled survey weights = annual weights / 3.",
+      "Health outcomes were not imputed."
+    )
+  )
 
+# 9. SAVE TABLES
 save_table <- function(tbl, title, note, filename) {
   
   output <- tbl %>%
@@ -281,23 +296,7 @@ save_table(
   "results/tables/table1B.html"
 )
 
-table1C_gt <- table1C %>%
-  as_gt() %>%
-  tab_header(
-    title = "Table 1C. After Imputation - Survey-Weighted",
-    subtitle = "BRFSS 2023-2025, ages 18-64"
-  ) %>%
-  tab_source_note(
-    source_note = paste(
-      "Completed imputation #1.",
-      "Unweighted counts and survey-weighted percentages.",
-      "Pooled survey weights = annual weights / 3.",
-      "Health outcomes were not imputed."
-    )
-  )
-
 gtsave(table1C_gt, "results/tables/table1C.html")
-
 
 saveRDS(
   list(A = table1A, B = table1B, C = table1C),
@@ -306,3 +305,4 @@ saveRDS(
 
 # Final Message
 message("All three Table 1 tables saved.")
+message("Script 05 Complete.")

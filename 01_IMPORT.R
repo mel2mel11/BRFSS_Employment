@@ -15,13 +15,14 @@ library(purrr)
 dir.create("data/processed",  recursive = TRUE, showWarnings = FALSE)
 
 years <- 2023:2025
+
 # check varaible names against annual codebooks.
 core <- c('EMPLOY1','INCOME3','EDUCA','GENHLTH','MENTHLTH','PHYSHLTH',
           '_AGE80', '_IMPRACE','SEXVAR','_STATE','_LLCPWT','_STSTR','_PSU',
           'MARITAL','CHILDREN','_METSTAT','_BMI5CAT','CHECKUP1',
           '_SMOKER3','_TOTINDA')
 
-# Year-specific variable names (not needed for imputation itself).
+# Year-specific variable names
 by_year <- list('2023'=c(insurance='_HLTHPL1',alcohol='_RFDRHV8'),
                 '2024'=c(insurance='_HLTHPL2',alcohol='_RFDRHV9'),
                 '2025'=c(insurance='_HLTHPL2',alcohol='_RFDRHV9'))

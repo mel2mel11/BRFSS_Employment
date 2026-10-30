@@ -15,12 +15,13 @@ targets <- c(
   "CHILDREN_CAT", "SMOKING", "ALCOHOL"
 )
 
+# sanity check
 stopifnot(
   all(targets %in% names(imp$data)),
   nrow(d) == nrow(imp$data)
 )
 
-# Convert factor-coded BRFSS responses back to numeric codes.
+# Convert factor-coded responses back to numeric codes.
 to_code <- function(x) {
   as.integer(as.character(x))
 }
@@ -283,4 +284,5 @@ cat("\nRemaining missing values in completed dataset #1:\n")
 print(colSums(is.na(completed[[1]][, targets, drop = FALSE])))
 
 # Final Message
+
 message("Script 04 complete.")

@@ -1,20 +1,21 @@
 # 02_CLEAN.R
 #
-# Clean BRFSS 2023-2025 variables
+# Clean BRFSS 2023-2025 variables by changing BRFSS codes to NA/Missing
 # Study population limited to adults ages 18-64
 
 
+# 1. LOAD DATA
+
 library(dplyr)
 
-
-# 1. load data
 # again, change filepath
 d <- readRDS("C:/Users/Melodie Nekoorad/Documents/Research/BRFSS/ReshapeBRFSS/brfss_rebuild/data/processed/01_master.rds")
 
 cat("Original sample size:", nrow(d), "\n")
 
 
-# 2. save original data
+# 2. SAVE ORIGINAL DATA
+
 # Useful for checking original missing responses and documentation
 saveRDS(d, 'data/processed/02_original_selected.rds')
 
@@ -129,7 +130,7 @@ d <- d %>%
     alcohol_code = valid_or_na(alcohol_cdc, 1:2),
     
     
-    # DEMOGRAPHIC VARAIBLES
+    #_____ DEMOGRAPHIC VARAIBLES _____
     age = valid_or_na(`_AGE80`, 18:80),
     
     race = valid_or_na(`_IMPRACE`, 1:6),
@@ -139,7 +140,7 @@ d <- d %>%
     state = as.integer(`_STATE`),
     
     
-    # IMPUTATION PREDICTOR
+    #_____ IMPUTATION PREDICTOR _____
     # Log survey weights are retained as predictors
     # in the MICE imputation model.
     log_weight = if_else(
@@ -149,7 +150,7 @@ d <- d %>%
     ),
     
 
-    # SURVEY DESIGN VARAIBLES
+    #_____ SURVEY DESIGN VARAIBLES _____
     # Keep survey strata and PSUs across years.
     strata_year = paste(
       year,
@@ -166,8 +167,7 @@ d <- d %>%
   )
 
 
-# 4. CHECK NON-IMPUTED VARAIBLES
-# These variables are not being imputed, check completeness
+# 4. CHECK COMPLETENESS OF NON-IMPUTED VARAIBLES
 
 stopifnot(
   all(!is.na(d$age)),
@@ -178,7 +178,6 @@ stopifnot(
   all(!is.na(d$`_STSTR`)),
   all(!is.na(d$`_PSU`))
 )
-
 
 # 5. RESTRICT POP'N TO ADULTS 18-64
 d <- d %>%
@@ -199,7 +198,7 @@ d$weight_annual <- d$`_LLCPWT`
 
 
 # 7. SUMMARY OF MISSINGNESS
-# Check which varaibles have missing values, before running imputation
+# Check which variables have missing values, before running imputation
 missing_vars <- c(
   'EMPLOY1',
   'INCOME3',

@@ -1,7 +1,7 @@
 # 03_IMPUTE.R
 #
 # multiple imputation using MICE
-# looking into employment, income, and health for 2023-2025
+# looking into employment, income, health for 2023-2025
 #
 # IMPUTED VARIABLES:
 #   1. EMPLOY1       Employment status
@@ -77,7 +77,7 @@ children_binary <- ifelse(
 # 3 = Former smoker
 # 4 = Never smoked
 #
-# Script 04 will combine codes 1 and 2 into Current.
+# Script 04 will combine 1 and 2 into Current.
 smoking_original <- d$smoking_code
 
 
@@ -85,9 +85,6 @@ smoking_original <- d$smoking_code
 # 1 = No
 # 2 = Yes
 # NA = Missing
-#
-# Script 02 already cleaned the year-specific
-# CDC heavy-drinking variable.
 alcohol_original <- d$alcohol_code
 
 
@@ -178,9 +175,8 @@ mi <- data.frame(
 
 
 # 5. MISSING GEN HEALTH
-# gen health is auxiliary predictor, do NOT impute
-# 
-# give missing gen health its own category so respondents are
+# auxiliary predictor, do NOT impute.
+# # give missing gen health its own category so respondents are
 # not dropped from MICE
 
 mi$health <- addNA(
@@ -208,10 +204,7 @@ missing_counts <- colSums(
   is.na(mi[, targets, drop = FALSE])
 )
 
-missing_percent <- round(
-  100 * missing_counts / nrow(mi),
-  2
-)
+missing_percent <- round(100 * missing_counts / nrow(mi), 2)
 
 missing_summary <- data.frame(
   variable = targets,
